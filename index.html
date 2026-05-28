@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Rosemary Wekesa — UI/UX Designer & WordPress Support Specialist</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700;800&family=Inter:wght@300;400;500&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  :root {
+    --ink: #2A2438;
+    --paper: #faf9fd;
+    --accent: #7e57c2;
+    --accent-light: #b79ced;
+    --accent-pale: #d8c7f3;
+    --muted: #8E8AA6;
+    --card-bg: #ffffff;
+    --tag-bg: #ede8f7;
+  }
+  body { font-family: 'Inter', sans-serif; background: var(--paper); color: var(--ink); line-height: 1.6; overflow-x: hidden; }
+
+  /* NAV */
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 3rem; border-bottom: 1.5px solid var(--ink); position: sticky; top: 0; background: var(--paper); z-index: 100; }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a { font-family: 'Manrope', sans-serif; font-size: 0.8rem; font-weight: 600; text-decoration: none; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HAMBURGER */
+  .burger { display: none; flex-direction: column; justify-content: space-between; width: 24px; height: 17px; cursor: pointer; background: none; border: none; padding: 0; z-index: 200; }
+  .burger span { display: block; height: 2px; width: 100%; background: var(--ink); border-radius: 2px; transition: all 0.3s ease; transform-origin: center; }
+  .burger.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+  .burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .burger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+  /* MOBILE DROPDOWN */
+  .mobile-menu { display: none; position: fixed; top: 57px; left: 0; right: 0; background: var(--paper); border-bottom: 1.5px solid var(--ink); z-index: 99; flex-direction: column; padding: 0; overflow: hidden; max-height: 0; transition: max-height 0.35s ease; }
+  .mobile-menu.open { max-height: 300px; }
+  .mobile-menu a { font-family: 'Manrope', sans-serif; font-size: 0.85rem; font-weight: 600; text-decoration: none; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 1.1rem 2rem; border-bottom: 1px solid var(--tag-bg); transition: all 0.2s; display: block; }
+  .mobile-menu a:last-child { border-bottom: none; }
+  .mobile-menu a:hover { color: var(--accent); background: var(--tag-bg); padding-left: 2.5rem; }
+
+  /* HERO */
+  .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 88vh; border-bottom: 1.5px solid var(--ink); }
+  .hero-left { padding: 5rem 3rem; border-right: 1.5px solid var(--ink); display: flex; flex-direction: column; justify-content: space-between; }
+  .hero-tag { font-family: 'Manrope', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; }
+  .hero-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -2px; }
+  .hero-name span { color: var(--accent); }
+  .hero-sub { font-family: 'Inter', sans-serif; font-size: 1rem; color: var(--muted); font-weight: 300; max-width: 340px; margin-top: 1.5rem; line-height: 1.7; }
+  .hero-badges { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2.5rem; }
+  .badge { font-family: 'Manrope', sans-serif; display: inline-flex; align-items: center; gap: 6px; background: var(--ink); color: var(--paper); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; padding: 0.4rem 1rem; border-radius: 2px; }
+  .badge.outline { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+  .hero-cta { margin-top: 3rem; display: flex; gap: 1rem; }
+  .btn { font-family: 'Manrope', sans-serif; padding: 0.8rem 2rem; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border: 1.5px solid var(--ink); transition: all 0.2s; text-decoration: none; display: inline-block; border-radius: 2px; }
+  .btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
+  .btn-primary:hover { background: #6a45ae; border-color: #6a45ae; }
+  .btn-ghost { background: transparent; color: var(--ink); }
+  .btn-ghost:hover { background: var(--ink); color: var(--paper); }
+
+  .hero-right { background: var(--ink); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 4rem 3rem; gap: 2.5rem; position: relative; overflow: hidden; }
+  .hero-right::before { content: 'RW'; font-family: 'Cormorant Garamond', serif; font-size: 20rem; font-weight: 800; color: rgba(183,156,237,0.05); position: absolute; top: -3rem; right: -2rem; line-height: 1; pointer-events: none; }
+  .stat-card { background: rgba(183,156,237,0.08); border: 1px solid rgba(183,156,237,0.18); padding: 1.5rem 2rem; width: 100%; max-width: 280px; }
+  .stat-number { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 800; color: var(--paper); line-height: 1; }
+  .stat-number em { font-style: normal; color: var(--accent-light); }
+  .stat-label { font-family: 'Manrope', sans-serif; font-size: 0.72rem; color: rgba(255,255,255,0.4); font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.5rem; }
+
+  /* SKILLS */
+  .skills-section { display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 1.5px solid var(--ink); }
+  .skill-col { padding: 3rem 2.5rem; border-right: 1.5px solid var(--ink); }
+  .skill-col:last-child { border-right: none; }
+  .skill-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .skill-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .skill-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.2rem; }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .skill-tag { font-family: 'Manrope', sans-serif; font-size: 0.7rem; font-weight: 600; background: var(--tag-bg); color: var(--ink); padding: 0.3rem 0.7rem; letter-spacing: 0.04em; border-radius: 2px; }
+  .skill-tag.purple { background: #ede8f7; color: var(--accent); }
+
+  /* PROJECTS */
+  .projects-header { padding: 3.5rem 3rem 2rem; display: flex; align-items: baseline; gap: 1.5rem; border-bottom: 1.5px solid var(--ink); }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; }
+  .section-num { font-family: 'Manrope', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); border-left: 2px solid var(--accent); padding-left: 0.6rem; }
+
+  .project-card { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1.5px solid var(--ink); min-height: 360px; }
+  .project-visual { background: var(--ink); display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 1.5px solid var(--ink); padding: 3rem; position: relative; overflow: hidden; }
+  .project-visual::after { content: ''; position: absolute; width: 200px; height: 200px; border-radius: 50%; border: 40px solid rgba(183,156,237,0.12); bottom: -60px; right: -60px; }
+  .project-logo { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 800; color: var(--paper); letter-spacing: -2px; z-index: 1; }
+  .project-logo span { color: var(--accent-light); }
+  .project-subtitle-vis { font-family: 'Manrope', sans-serif; font-size: 0.7rem; color: rgba(255,255,255,0.4); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.5rem; z-index: 1; }
+  .project-info { padding: 3rem; display: flex; flex-direction: column; justify-content: space-between; }
+  .project-meta { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .project-type { font-family: 'Manrope', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .project-dot { width: 4px; height: 4px; background: var(--muted); border-radius: 50%; }
+  .project-year { font-family: 'Manrope', sans-serif; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.08em; }
+  .project-name { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; line-height: 1.15; margin-bottom: 1rem; letter-spacing: -0.5px; }
+  .project-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.75; margin-bottom: 1.5rem; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .project-tag { font-family: 'Manrope', sans-serif; font-size: 0.7rem; font-weight: 600; background: var(--tag-bg); color: var(--ink); padding: 0.3rem 0.8rem; border-radius: 2px; letter-spacing: 0.04em; }
+  .hackathon-label { font-family: 'Manrope', sans-serif; display: inline-flex; align-items: center; gap: 6px; background: #ede8f7; color: var(--accent); font-size: 0.7rem; font-weight: 700; padding: 0.35rem 0.8rem; border-radius: 2px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* ABOUT */
+  .about-section { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1.5px solid var(--ink); }
+  .about-left { padding: 4rem 3rem; border-right: 1.5px solid var(--ink); }
+  .about-right { padding: 4rem 3rem; background: var(--card-bg); }
+  .about-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 1.5rem; }
+  .about-body { font-size: 0.9rem; color: var(--muted); line-height: 1.85; }
+  .about-body strong { color: var(--ink); font-weight: 500; }
+  .timeline-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--tag-bg); }
+  .timeline-item:last-child { border-bottom: none; margin-bottom: 0; }
+  .timeline-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 5px; }
+  .timeline-title { font-family: 'Inter', sans-serif; font-weight: 500; font-size: 0.9rem; margin-bottom: 0.25rem; }
+  .timeline-date { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: var(--muted); }
+
+  /* CONTACT */
+  .contact-section { padding: 5rem 3rem; background: var(--ink); display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap; }
+  .contact-title { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 800; color: var(--paper); letter-spacing: -1.5px; line-height: 1.1; }
+  .contact-title span { color: var(--accent-light); }
+  .contact-links { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-link { display: flex; align-items: center; gap: 0.75rem; font-family: 'Manrope', sans-serif; font-size: 0.85rem; font-weight: 500; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.2s; }
+  .contact-link:hover { color: var(--accent-light); }
+  .contact-link-icon { width: 36px; height: 36px; border: 1px solid rgba(183,156,237,0.2); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; border-radius: 2px; }
+
+  footer { padding: 1.2rem 3rem; display: flex; justify-content: space-between; align-items: center; border-top: 1.5px solid var(--ink); font-family: 'Manrope', sans-serif; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.06em; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .burger { display: flex; }
+    .mobile-menu { display: flex; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 3rem 1.5rem; border-right: none; border-bottom: 1.5px solid var(--ink); }
+    .hero-right { padding: 3rem 1.5rem; min-height: 400px; }
+    .skills-section { grid-template-columns: 1fr; }
+    .skill-col { border-right: none; border-bottom: 1.5px solid var(--ink); }
+    .project-card { grid-template-columns: 1fr; }
+    .project-visual { border-right: none; border-bottom: 1.5px solid var(--ink); min-height: 220px; }
+    .about-section { grid-template-columns: 1fr; }
+    .about-left { border-right: none; border-bottom: 1.5px solid var(--ink); }
+    .projects-header { padding: 2rem 1.5rem 1.5rem; }
+    .project-info { padding: 2rem 1.5rem; }
+    .about-left, .about-right { padding: 2.5rem 1.5rem; }
+    .contact-section { padding: 3rem 1.5rem; flex-direction: column; align-items: flex-start; }
+    footer { padding: 1rem 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Rosemary Wekesa</div>
+  <div class="nav-links">
+    <a href="#work">Work</a>
+    <a href="#skills">Skills</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <button class="burger" id="burger" aria-label="Toggle menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- Mobile dropdown menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#work" onclick="closeMenu()">Work</a>
+  <a href="#skills" onclick="closeMenu()">Skills</a>
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+</div>
+
+<section class="hero">
+  <div class="hero-left">
+    <div>
+      <p class="hero-tag">UI/UX Designer &amp; WordPress Support Specialist · Nairobi, Kenya</p>
+      <h1 class="hero-name">Rose<span>mary</span><br>Wekesa</h1>
+      <p class="hero-sub">I design intuitive experiences and support WordPress users — helping sites run smoothly, intentionally, and with a sharp eye for detail.</p>
+      <div class="hero-badges">
+        <span class="badge">WordPress Support</span>
+        <span class="badge">WooCommerce</span>
+        <span class="badge">UI/UX Design</span>
+        <span class="badge outline">Fast Learner</span>
+      </div>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#work">View Projects</a>
+        <a class="btn btn-ghost" href="#contact">Get in Touch</a>
+      </div>
+    </div>
+    <p style="font-family:'Manrope',sans-serif; font-size:0.72rem; color:var(--muted); margin-top:3rem; letter-spacing:0.08em; font-weight:600; text-transform:uppercase;">Open to WordPress Support &amp; Freelance Roles</p>
+  </div>
+  <div class="hero-right">
+    <div class="stat-card">
+      <div class="stat-number">1<em>+</em></div>
+      <div class="stat-label">Live hackathon project shipped</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">2<em>x</em></div>
+      <div class="stat-label">Iterated &amp; improved post-hackathon</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">∞</div>
+      <div class="stat-label">Curiosity to keep building</div>
+    </div>
+  </div>
+</section>
+
+<section class="skills-section" id="skills">
+  <div class="skill-col">
+    <div class="skill-icon">⚡</div>
+    <div class="skill-title">WordPress Support</div>
+    <p class="skill-desc">Learning fast and hands-on — I help configure, troubleshoot, and maintain WordPress sites, working with real plugins and real users.</p>
+    <div class="skill-tags">
+      <span class="skill-tag">WordPress CMS</span>
+      <span class="skill-tag">Site Configuration</span>
+      <span class="skill-tag purple">WooCommerce</span>
+      <span class="skill-tag purple">Payment Plugins</span>
+      <span class="skill-tag">Troubleshooting</span>
+      <span class="skill-tag">Theme Customisation</span>
+    </div>
+  </div>
+  <div class="skill-col">
+    <div class="skill-icon">🎨</div>
+    <div class="skill-title">UI/UX Design</div>
+    <p class="skill-desc">I think in flows and feelings. I design interfaces that guide users naturally, from first click to conversion.</p>
+    <div class="skill-tags">
+      <span class="skill-tag">User Research</span>
+      <span class="skill-tag">Wireframing</span>
+      <span class="skill-tag">Prototyping</span>
+      <span class="skill-tag">Visual Design</span>
+      <span class="skill-tag">Figma</span>
+    </div>
+  </div>
+  <div class="skill-col">
+    <div class="skill-icon">🚀</div>
+    <div class="skill-title">Speed &amp; Adaptability</div>
+    <p class="skill-desc">I pick up tools quickly, iterate without fear, and ship. The Solhydra project was built and improved within a tight timeline.</p>
+    <div class="skill-tags">
+      <span class="skill-tag">Hackathon Ready</span>
+      <span class="skill-tag">Self-taught</span>
+      <span class="skill-tag">Iterative Builder</span>
+      <span class="skill-tag">Problem Solver</span>
+    </div>
+  </div>
+</section>
+
+<div class="projects-header" id="work">
+  <h2 class="section-title">Selected Work</h2>
+  <span class="section-num">01 / Projects</span>
+</div>
+
+<article class="project-card">
+  <div class="project-visual">
+    <div class="project-logo">Sol<span>hydra</span></div>
+    <div class="project-subtitle-vis">Hydration Drink Brand & Landing Page</div>
+  </div>
+  <div class="project-info">
+    <div>
+      <div class="project-meta">
+        <span class="project-type">UI/UX Design · Branding</span>
+        <span class="project-dot"></span>
+        <span class="project-year">2024</span>
+        <span class="project-dot"></span>
+        <span class="hackathon-label">🏆 Hackathon Project</span>
+      </div>
+      <h3 class="project-name">Solhydra — Hydration Drink Brand</h3>
+      <p class="project-desc">A bold landing page for Solhydra, an ionized low-sugar hydration drink designed for everyday Africans — workers, professionals, and athletes. Built during a hackathon, the design features a dark navy identity, strong product photography, a competitor comparison table, and an ingredient breakdown section. The full Figma design includes a scrolling marquee ticker strip below the hero section that highlights key brand values — this element was not carried into the live Vercel build.</p>
+      <div class="project-tags">
+        <span class="project-tag">UI/UX Design</span>
+        <span class="project-tag">Figma</span>
+        <span class="project-tag">Landing Page</span>
+        <span class="project-tag">Brand Identity</span>
+        <span class="project-tag">Product Design</span>
+        <span class="project-tag">Typography</span>
+      </div>
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:0.5rem; align-items:center;">
+        <a href="https://solhydra.vercel.app/" target="_blank" rel="noopener" style="font-family:'Manrope',sans-serif; font-size:0.75rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:0.6rem 1.2rem; background:var(--accent); color:white; text-decoration:none; border-radius:2px; transition:background 0.2s;">View Live Site ↗</a>
+        <a href="https://www.figma.com/proto/5ibxWV5ZAyC4xb6faFPmwu/Agit-class-work?node-id=503-44&t=XlIdTTmKEGB3KHLl-1" target="_blank" rel="noopener" style="font-family:'Manrope',sans-serif; font-size:0.75rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:0.6rem 1.2rem; background:transparent; color:var(--accent); border:1.5px solid var(--accent); text-decoration:none; border-radius:2px; transition:all 0.2s;">View in Figma ↗</a>
+        <span style="font-family:'Manrope',sans-serif; font-size:0.72rem; color:var(--muted); font-style:italic;">🎥 Loom demo coming soon</span>
+      </div>
+    </div>
+    <div style="margin-top:1rem;">
+      <span style="font-family:'Manrope',sans-serif; font-size:0.75rem; color:var(--muted);">Hackathon build · Independently improved post-event</span>
+    </div>
+  </div>
+</article>
+
+<section class="about-section" id="about">
+  <div class="about-left">
+    <h2 class="about-title">A bit about me</h2>
+    <p class="about-body">
+      I'm Rosemary — a UI/UX designer and WordPress support specialist who cares deeply about how things work and how they feel to use.<br><br>
+      My journey into WordPress was fast by necessity: I joined a hackathon, had to set up and ship a real site, and I did. What I discovered is that I <strong>love</strong> the process of making sure everything works — from plugin configuration to payment flows to a smooth user experience.<br><br>
+      I'm growing into WordPress support with genuine curiosity. I don't just complete tasks — I go back and make them better, which is exactly what I did with Solhydra after the hackathon ended.<br><br>
+      Currently looking for opportunities where I can grow fast, support users meaningfully, and keep building.
+    </p>
+  </div>
+  <div class="about-right">
+    <h3 class="about-title" style="font-size:1.3rem; margin-bottom:2rem;">Journey so far</h3>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">Solhydra Hackathon — Built &amp; Shipped</div>
+        <div class="timeline-date">WordPress + WooCommerce · First real project under pressure</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">Solhydra v2 — Independent Iteration</div>
+        <div class="timeline-date">Improved UX, refined checkout flow, enhanced design</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">UI/UX Design Practice</div>
+        <div class="timeline-date">Wireframes, prototypes &amp; visual design across projects</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">Now — Supporting, designing, growing</div>
+        <div class="timeline-date">Open to WordPress support &amp; UI/UX roles in Nairobi &amp; remote</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact-section" id="contact">
+  <h2 class="contact-title">Let's build<br>something<br><span>together.</span></h2>
+  <div class="contact-links">
+    <a class="contact-link" href="mailto:rosewekesa98@gmail.com">
+      <span class="contact-link-icon">✉</span>
+      rosewekesa98@gmail.com
+    </a>
+    <a class="contact-link" href="https://www.linkedin.com/in/rosemary777wambani/" target="_blank" rel="noopener">
+      <span class="contact-link-icon">in</span>
+      LinkedIn · Rosemary Wekesa
+    </a>
+    <a class="contact-link" href="https://dribbble.com/rose-w-" target="_blank" rel="noopener">
+      <span class="contact-link-icon">🏀</span>
+      Dribbble · rose-w-
+    </a>
+    <a class="contact-link" href="#">
+      <span class="contact-link-icon">🇰🇪</span>
+      Nairobi, Kenya · Open to remote
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Rosemary Wekesa</span>
+  <span>Designed &amp; built with intention.</span>
+</footer>
+
+<script>
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  burger.addEventListener('click', () => {
+    burger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+
+  function closeMenu() {
+    burger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }
+</script>
+
+</body>
+</html>
